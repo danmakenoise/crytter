@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "db:create": "sequelize db:create",
     "sequelize": "sequelize"
   },
   "author": "",

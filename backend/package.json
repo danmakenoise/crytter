@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "db:create": "sequelize db:create",
+    "lint": "eslint .",
     "sequelize": "sequelize"
   },
   "author": "",

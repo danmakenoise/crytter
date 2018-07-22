@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "db:create": "sequelize db:create",
+    "db:drop": "sequelize db:drop",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate",
     "lint": "eslint .",
     "sequelize": "sequelize"
   },

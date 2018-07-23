@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
 
 const App = () => (
-  <div className="App">
+  <div className='App'>
     <h1>Welcome to Crytter</h1>
   </div>
 )
 
-export default App;
+export default App

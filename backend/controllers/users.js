@@ -40,11 +40,12 @@ module.exports = {
         username: user.username
       }))
       .catch(error => {
-        if (error.name.match(/Sequelize/)) {
+        if (error.name.match(/Sequelize/) && error.errors.length) {
           return res.status(400).send({
             errors: error.errors.map(({ message }) => message)
           })
         } else {
+          console.warn(error)
           return res.status(500).send()
         }
       })

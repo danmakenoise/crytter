@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "deploy": "cd ../ && git subtree push --prefix frontend/ heroku-frontend master",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

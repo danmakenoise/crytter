@@ -9,6 +9,7 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate",
+    "deploy": "cd ../ && git subtree push --prefix backend/ heroku-backend master",
     "lint": "eslint .",
     "sequelize": "sequelize",
     "start:dev": "nodemon bin/start"

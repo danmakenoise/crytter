@@ -7,6 +7,7 @@ const session = require('express-session')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 const db = require('./models')
+const sessionsController = require('./controllers/sessions')
 const usersController = require('./controllers/users')
 
 const app = express()
@@ -23,6 +24,7 @@ app.use(session({
   })
 }))
 
+app.post('/login', sessionsController.login)
 app.post('/users', usersController.create)
 
 module.exports = app

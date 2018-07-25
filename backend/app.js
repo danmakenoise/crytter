@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const express = require('express')
 const logger = require('morgan')
 const session = require('express-session')
@@ -14,6 +15,9 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+}))
 app.use(logger('dev'))
 app.use(session({
   secret: process.env.SESSION_SECRET || 'crytter-dev',

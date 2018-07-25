@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import Login from './components/Login'
 import Signup from './components/Signup'
 
 class App extends Component {
@@ -10,9 +11,13 @@ class App extends Component {
           <h1>Crytter</h1>
           <ul>
             <li>
+              <Link to='/login'>Login</Link>
+            </li>
+            <li>
               <Link to='/signup'>Signup</Link>
             </li>
           </ul>
+          <Route path='/login' component={Login} />
           <Route path='/signup' component={Signup} />
         </div>
       </Router>

@@ -55,5 +55,5 @@ export const signupUser = (params) => new Promise((resolve, reject) => {
         password: params.password
       })
     }
-  ).then(resolve)
+  ).then(() => resolve())
 })

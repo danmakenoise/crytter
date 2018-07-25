@@ -51,22 +51,24 @@ module.exports = {
       })
   },
   me (req, res) {
+    console.log(req.session.id, 'OH')
     if (!req.session.username) {
-      return res.status(401).send('Unauthorized')
+      return res.status(401).send({ error: 'Unauthorized' })
     }
 
     User.findOne({
       username: req.session.username
     })
       .then(user => {
+        console.log(user)
         return res.status(200).send({
           username: user.username
         })
       })
       .catch(error => {
         console.warn(error)
-        req.session.username = null
-        return res.status(401).send('Unauthorized')
+        req.session.destroy()
+        return res.status(401).send({ error: 'Unauthorized' })
       })
   }
 }

@@ -57,3 +57,13 @@ export const signupUser = (params) => new Promise((resolve, reject) => {
     }
   ).then(() => resolve())
 })
+
+export const getMe = () => window.fetch(
+  `${config.api}/users/me`,
+  {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json'
+    }
+  }
+)

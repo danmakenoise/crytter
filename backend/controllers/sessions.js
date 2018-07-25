@@ -11,6 +11,7 @@ module.exports = {
       username: req.body.username
     })
       .then(user => {
+        if (!user) return res.status(401).send()
         const isPassword = bcrypt.compareSync(req.body.password, user.passwordHash)
 
         if (!isPassword) {
@@ -19,8 +20,10 @@ module.exports = {
 
         req.session.username = user.username
 
-        return res.send(200).send({
-          username: user.username
+        req.session.save(() => {
+          res.status(200).send({
+            username: user.username
+          })
         })
       })
   }

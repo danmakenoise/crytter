@@ -29,6 +29,8 @@ app.use(session({
 }))
 
 app.post('/login', sessionsController.login)
+
+app.get('/users/me', usersController.me)
 app.post('/users', usersController.create)
 
 module.exports = app

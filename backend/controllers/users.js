@@ -49,5 +49,24 @@ module.exports = {
           return res.status(500).send()
         }
       })
+  },
+  me (req, res) {
+    if (!req.session.username) {
+      return res.status(401).send('Unauthorized')
+    }
+
+    User.findOne({
+      username: req.session.username
+    })
+      .then(user => {
+        return res.status(200).send({
+          username: user.username
+        })
+      })
+      .catch(error => {
+        console.warn(error)
+        req.session.username = null
+        return res.status(401).send('Unauthorized')
+      })
   }
 }

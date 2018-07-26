@@ -17,7 +17,6 @@ class Login extends Component {
   }
 
   componentDidMount () {
-    console.log('hello')
     getMe()
       .then(res => res.json())
       .then(({ username }) => {

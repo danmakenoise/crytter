@@ -51,7 +51,6 @@ module.exports = {
       })
   },
   me (req, res) {
-    console.log(req.session.id, 'OH')
     if (!req.session.username) {
       return res.status(401).send({ error: 'Unauthorized' })
     }
@@ -60,7 +59,6 @@ module.exports = {
       username: req.session.username
     })
       .then(user => {
-        console.log(user)
         return res.status(200).send({
           username: user.username
         })

@@ -10,6 +10,7 @@ const config = {
 export const login = params => window.fetch(
   `${config.api}/login`,
   {
+    credentials: 'include',
     method: 'POST',
     headers: {
       'Accept': 'application/json',

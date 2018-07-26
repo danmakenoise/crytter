@@ -1,5 +1,4 @@
 const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const express = require('express')
 const logger = require('morgan')
@@ -14,16 +13,16 @@ const usersController = require('./controllers/users')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(cookieParser())
 app.use(cors({
+  credentials: true,
   origin: process.env.FRONTEND_URL || 'http://localhost:3000'
 }))
 app.use(logger('dev'))
 app.use(session({
+  resave: false,
   secret: process.env.SESSION_SECRET || 'crytter-dev',
   store: new SequelizeStore({
     db: db.sequelize,
-    resave: false,
     table: 'Session'
   })
 }))

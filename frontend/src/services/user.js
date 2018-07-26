@@ -61,6 +61,7 @@ export const signupUser = (params) => new Promise((resolve, reject) => {
 export const getMe = () => window.fetch(
   `${config.api}/users/me`,
   {
+    credentials: 'include',
     method: 'GET',
     headers: {
       'Accept': 'application/json'

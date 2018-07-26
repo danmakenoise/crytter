@@ -7,21 +7,36 @@ import Signup from './components/Signup'
 
 class App extends Component {
   render () {
+    const isLoggedIn = window.localStorage.getItem('isLoggedIn')
+
     return (
       <Router>
         <div className='App'>
           <h1>Crytter</h1>
           <ul>
-            <li>
-              <Link to='/login'>Login</Link>
-            </li>
-            <li>
-              <Link to='/signup'>Signup</Link>
-            </li>
+            {!isLoggedIn &&
+              <li>
+                <Link to='/login'>Login</Link>
+              </li>
+            }
+            {!isLoggedIn &&
+              <li>
+                <Link to='/signup'>Signup</Link>
+              </li>
+            }
+            {isLoggedIn &&
+              <li>
+                <Link to='/'>Home</Link>
+              </li>
+            }
           </ul>
           <Route path='/' exact component={Home} />
-          <Route path='/login' component={Login} />
-          <Route path='/signup' component={Signup} />
+          {!isLoggedIn &&
+            <Route path='/login' component={Login} />
+          }
+          {!isLoggedIn &&
+            <Route path='/signup' component={Signup} />
+          }
         </div>
       </Router>
     )

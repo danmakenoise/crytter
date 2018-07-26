@@ -25,6 +25,7 @@ class Login extends Component {
           return
         }
 
+        window.localStorage.clear()
         this.props.history.push('/login')
       })
   }

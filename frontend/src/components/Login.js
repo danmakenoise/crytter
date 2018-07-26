@@ -30,7 +30,8 @@ class Login extends Component {
     login({ username, password })
       .then((res) => {
         if (res.status === 200) {
-          this.props.history.push('/')
+          window.localStorage.setItem('isLoggedIn', true)
+          window.location = '/'
         } else {
           this.setState({
             error: 'Invalid login'

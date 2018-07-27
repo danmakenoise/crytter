@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import ReactRouterPropTypes from 'react-router-prop-types'
-import { withRouter } from 'react-router-dom'
-import { login } from '../services/session'
 
-const propTypes = {
-  history: ReactRouterPropTypes.history.isRequired
-}
+import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
+import Snackbar from 'material-ui/Snackbar'
+
+import { login } from '../services/session'
 
 class Login extends Component {
   constructor (props) {
@@ -24,8 +23,8 @@ class Login extends Component {
   handleSubmit (event) {
     event.preventDefault()
 
-    const username = this.$username.current.value
-    const password = this.$password.current.value
+    const username = this.$username.current.input.value
+    const password = this.$password.current.input.value
 
     login({ username, password })
       .then((res) => {
@@ -44,28 +43,34 @@ class Login extends Component {
     return (
       <div>
         <h2>Login</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='loginUsername'>Username:
-            <input type='text' name='loginUsername' ref={this.$username} />
-          </label>
+        <form>
+          <TextField
+            fullWidth
+            hintText='Username'
+            ref={this.$username}
+          />
 
-          <label htmlFor='loginPassword'>Password:
-            <input type='password' name='loginPassword' ref={this.$password} />
-          </label>
+          <TextField
+            fullWidth
+            hintText='Password'
+            ref={this.$password}
+            type='password'
+          />
 
-          <button>Login</button>
+          <FlatButton
+            label='Login'
+            onClick={this.handleSubmit}
+          />
         </form>
 
-        {!!this.state.error && (
-          <div>
-            <h3>Error:</h3>
-            {this.state.error}
-          </div>
-        )}
+        <Snackbar
+          autoHideDuration={4000}
+          message={this.state.error}
+          open={!!this.state.error}
+        />
       </div>
     )
   }
 }
 
-Login.propTypes = propTypes
-export default withRouter(Login)
+export default Login

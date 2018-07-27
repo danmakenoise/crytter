@@ -19,6 +19,9 @@ app.use(cors({
 }))
 app.use(logger('dev'))
 app.use(session({
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 365
+  },
   resave: false,
   secret: process.env.SESSION_SECRET || 'crytter-dev',
   store: new SequelizeStore({

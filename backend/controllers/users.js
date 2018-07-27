@@ -57,7 +57,9 @@ module.exports = {
     }
 
     User.findOne({
-      username: req.session.username
+      where: {
+        username: req.session.username
+      }
     })
       .then(user => {
         return res.status(200).send({

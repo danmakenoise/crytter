@@ -3,12 +3,15 @@ const User = require('../models').User
 
 module.exports = {
   login (req, res) {
+    console.log(req.body)
     if (!req.body.username || !req.body.password) {
       return res.status(401).send()
     }
 
     User.findOne({
-      username: req.body.username
+      where: {
+        username: req.body.username
+      }
     })
       .then(user => {
         if (!user) {

@@ -52,6 +52,7 @@ module.exports = {
   },
   me (req, res) {
     if (!req.session.username) {
+      console.warn(`Session cookie missing or contained no username`)
       return res.status(401).send({ error: 'Unauthorized' })
     }
 

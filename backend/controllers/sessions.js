@@ -11,10 +11,14 @@ module.exports = {
       username: req.body.username
     })
       .then(user => {
-        if (!user) return res.status(401).send()
+        if (!user) {
+          console.warn(`Error finding username: ${req.body.username}`)
+          return res.status(401).send()
+        }
         const isPassword = bcrypt.compareSync(req.body.password, user.passwordHash)
 
         if (!isPassword) {
+          console.warn(`Incorrect password for: ${req.body.username}`)
           return res.status(401).send()
         }
 

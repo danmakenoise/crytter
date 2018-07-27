@@ -22,3 +22,11 @@ export const login = params => window.fetch(
     })
   }
 )
+
+export const logout = () => window.fetch(
+  `${config.api}/logout`,
+  {
+    credentials: 'include',
+    method: 'GET'
+  }
+)

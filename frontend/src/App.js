@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
 
 import Home from './components/Home'
 import Login from './components/Login'
+import Logout from './components/Logout'
 import Signup from './components/Signup'
 
 class App extends Component {
@@ -29,6 +30,11 @@ class App extends Component {
                 <Link to='/'>Home</Link>
               </li>
             }
+            {isLoggedIn &&
+              <li>
+                <Link to='/logout'>Logout</Link>
+              </li>
+            }
           </ul>
           <Route path='/' exact component={Home} />
           {!isLoggedIn &&
@@ -36,6 +42,9 @@ class App extends Component {
           }
           {!isLoggedIn &&
             <Route path='/signup' component={Signup} />
+          }
+          {isLoggedIn &&
+            <Route path='/logout' component={Logout} />
           }
         </div>
       </Router>

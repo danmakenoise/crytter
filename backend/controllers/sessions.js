@@ -3,7 +3,6 @@ const User = require('../models').User
 
 module.exports = {
   login (req, res) {
-    console.log(req.body)
     if (!req.body.username || !req.body.password) {
       return res.status(401).send()
     }
@@ -33,5 +32,14 @@ module.exports = {
           })
         })
       })
+  },
+  logout (req, res) {
+    if (!req.session.username) {
+      return res.status(401).send()
+    }
+
+    req.session.destroy(() => {
+      res.status(200).send()
+    })
   }
 }

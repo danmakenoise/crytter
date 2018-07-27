@@ -31,6 +31,7 @@ app.use(session({
 }))
 
 app.post('/login', sessionsController.login)
+app.get('/logout', sessionsController.logout)
 
 app.get('/users/me', usersController.me)
 app.post('/users', usersController.create)

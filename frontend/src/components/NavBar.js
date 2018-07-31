@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import ReactRouterPropTypes from 'react-router-prop-types'
+import { compose } from 'ramda'
+import { withHandlers, withStateHandlers } from 'recompose'
+import { withRouter } from 'react-router-dom'
+
 import AppBar from '@material-ui/core/AppBar'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
@@ -7,14 +12,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { compose } from 'ramda'
-import { withHandlers, withStateHandlers } from 'recompose'
-import { withRouter } from 'react-router-dom'
 
 const propTypes = {
   currentMenuAnchor: PropTypes.node.isRequire,
   handleCloseMenu: PropTypes.func.isRequired,
   handleOpenMenu: PropTypes.func.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   isMenuOpen: PropTypes.bool.isRequired,
   navigateToLogin: PropTypes.func.isRequired,

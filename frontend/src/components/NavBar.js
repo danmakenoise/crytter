@@ -34,7 +34,7 @@ const styles = {
   appTitle: {
     flexGrow: 1,
     marginLeft: 20
-  },
+  }
 }
 
 const enhance = compose(

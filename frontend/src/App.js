@@ -1,55 +1,39 @@
-import React, { Component } from 'react'
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { withState } from 'recompose'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import Signup from './components/Signup'
 
-class App extends Component {
-  render () {
-    const isLoggedIn = window.localStorage.getItem('isLoggedIn')
-
-    return (
-      <Router>
-        <div className='App'>
-          <h1>Crytter</h1>
-          <ul>
-            {!isLoggedIn &&
-              <li>
-                <Link to='/login'>Login</Link>
-              </li>
-            }
-            {!isLoggedIn &&
-              <li>
-                <Link to='/signup'>Signup</Link>
-              </li>
-            }
-            {isLoggedIn &&
-              <li>
-                <Link to='/'>Home</Link>
-              </li>
-            }
-            {isLoggedIn &&
-              <li>
-                <Link to='/logout'>Logout</Link>
-              </li>
-            }
-          </ul>
-          <Route path='/' exact component={Home} />
-          {!isLoggedIn &&
-            <Route path='/login' component={Login} />
-          }
-          {!isLoggedIn &&
-            <Route path='/signup' component={Signup} />
-          }
-          {isLoggedIn &&
-            <Route path='/logout' component={Logout} />
-          }
-        </div>
-      </Router>
-    )
-  }
+const propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired
 }
 
-export default App
+const enhance = withState(
+  'isLoggedIn',
+  'setIsLoggedIn',
+  Boolean(window.localStorage.getItem('isLoggedIn'))
+)
+
+const App = props => (
+  <Router>
+    <div className='App'>
+      <NavBar />
+      <Route path='/' exact component={Home} />
+      {!props.isLoggedIn && [
+        <Route path='/login' component={Login} />,
+        <Route path='/signup' component={Signup} />
+      ]}
+      {props.isLoggedIn &&
+        <Route path='/logout' component={Logout} />
+      }
+    </div>
+  </Router>
+)
+
+App.propTypes = propTypes
+export default enhance(App)

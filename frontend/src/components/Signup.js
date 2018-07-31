@@ -1,80 +1,112 @@
-import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { compose } from 'ramda'
+import { withHandlers, withState, withStateHandlers } from 'recompose'
 import { withRouter } from 'react-router-dom'
+
 import { signupUser } from '../services/user'
 
 const propTypes = {
-  history: ReactRouterPropTypes.history.isRequired
+  formErrors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  formUsername: PropTypes.string.isRequired,
+  formPassword: PropTypes.string.isRequired,
+  formPasswordConfirm: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  setFormErrors: PropTypes.func.isRequired,
+  setFormPassword: PropTypes.func.isRequired,
+  setFormPasswordConfirm: PropTypes.func.isRequired,
+  setFormUsername: PropTypes.func.isRequired
 }
 
-class Signup extends Component {
-  constructor (props) {
-    super(props)
+const setFromEventValue = prop => event => ({
+  [prop]: event.target.value
+})
 
-    this.$username = React.createRef()
-    this.$password = React.createRef()
-    this.$passwordConfirm = React.createRef()
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-
-    this.state = {
-      errors: []
+const enhance = compose(
+  withRouter,
+  withState('formErrors', 'setFormErrors', []),
+  withStateHandlers(
+    {
+      formUsername: '',
+      formPassword: '',
+      formPasswordConfirm: ''
+    },
+    {
+      setFormUsername: () => setFromEventValue('formUsername'),
+      setFormPassword: () => setFromEventValue('formPassword'),
+      setFormPasswordConfirm: () => setFromEventValue('formPasswordConfirm')
     }
-  }
+  ),
+  withHandlers({
+    handleSubmit: props => (event) => {
+      event.preventDefault()
 
-  handleSubmit (event) {
-    event.preventDefault()
+      const username = props.formUsername
+      const password = props.formPassword
+      const passwordConfirm = props.formPasswordConfirm
 
-    const username = this.$username.current.value
-    const password = this.$password.current.value
-    const passwordConfirm = this.$passwordConfirm.current.value
+      signupUser({ username, password, passwordConfirm })
+        .then((errors) => {
+          if (errors) {
+            props.setFormErrors(errors)
+            return
+          }
 
-    signupUser({ username, password, passwordConfirm })
-      .then((errors) => {
-        if (errors) {
-          this.setState({ errors })
-          return
-        }
+          props.history.push('/login')
+        })
+    }
+  })
+)
 
-        this.props.history.push('/login')
-      })
-  }
+const Signup = props => (
+  <div>
+    <h2>Signup</h2>
+    <form onSubmit={props.handleSubmit}>
+      <label htmlFor='signupUsername'>Username:
+        <input
+          type='text'
+          name='signupUsername'
+          value={props.formUsername}
+          onChange={props.setFormUsername}
+        />
+      </label>
 
-  render () {
-    return (
+      <label htmlFor='signupPassword'>Password:
+        <input
+          type='password'
+          name='signupPassword'
+          value={props.formPassword}
+          onChange={props.setFormPassword}
+        />
+      </label>
+
+      <label htmlFor='signupConfirmPassword'>Confirm Password:
+        <input
+          type='password'
+          name='signupConfirmPassword'
+          value={props.formPasswordConfirm}
+          onChange={props.setFormPasswordConfirm}
+        />
+      </label>
+
+      <button>Signup</button>
+    </form>
+
+    {!!props.formErrors.length && (
       <div>
-        <h2>Signup</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='signupUsername'>Username:
-            <input type='text' name='signupUsername' ref={this.$username} />
-          </label>
+        <h3>Errors:</h3>
 
-          <label htmlFor='signupPassword'>Password:
-            <input type='password' name='signupPassword' ref={this.$password} />
-          </label>
-
-          <label htmlFor='signupConfirmPassword'>Confirm Password:
-            <input type='password' name='signupConfirmPassword' ref={this.$passwordConfirm} />
-          </label>
-
-          <button>Signup</button>
-        </form>
-
-        {!!this.state.errors.length && (
-          <div>
-            <h3>Errors:</h3>
-
-            <ul>
-              {this.state.errors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <ul>
+          {props.formErrors.map((error, index) => (
+            <li key={index}>{error}</li>
+          ))}
+        </ul>
       </div>
-    )
-  }
-}
+    )}
+  </div>
+)
 
 Signup.propTypes = propTypes
-export default withRouter(Signup)
+export default enhance(Signup)

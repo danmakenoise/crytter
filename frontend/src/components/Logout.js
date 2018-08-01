@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { lifecycle } from 'recompose'
 import { logout } from '../services/session'
 
-class Logout extends Component {
+const enhance = lifecycle({
   componentDidMount () {
     logout()
       .then(() => {
@@ -9,12 +10,10 @@ class Logout extends Component {
         window.location = '/'
       })
   }
+})
 
-  render () {
-    return (
-      <h2>Logging Out...</h2>
-    )
-  }
-}
+const Logout = () => (
+  <h2>Logging Out...</h2>
+)
 
-export default Logout
+export default enhance(Logout)

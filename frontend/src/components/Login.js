@@ -1,71 +1,93 @@
-import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { compose } from 'ramda'
+import { withHandlers, withState, withStateHandlers } from 'recompose'
 import { withRouter } from 'react-router-dom'
+
 import { login } from '../services/session'
 
 const propTypes = {
-  history: ReactRouterPropTypes.history.isRequired
+  formError: PropTypes.string.isRequired,
+  formUsername: PropTypes.string.isRequired,
+  formPassword: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  setFormErrors: PropTypes.func.isRequired,
+  setFormPassword: PropTypes.func.isRequired,
+  setFormUsername: PropTypes.func.isRequired
 }
 
-class Login extends Component {
-  constructor (props) {
-    super(props)
+const setFromEventValue = prop => event => ({
+  [prop]: event.target.value
+})
 
-    this.$username = React.createRef()
-    this.$password = React.createRef()
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-
-    this.state = {
-      error: ''
+const enhance = compose(
+  withRouter,
+  withState('formError', 'setFormError', ''),
+  withStateHandlers(
+    {
+      formUsername: '',
+      formPassword: ''
+    },
+    {
+      setFormUsername: () => setFromEventValue('formUsername'),
+      setFormPassword: () => setFromEventValue('formPassword')
     }
-  }
+  ),
+  withHandlers({
+    handleSubmit: props => (event) => {
+      event.preventDefault()
 
-  handleSubmit (event) {
-    event.preventDefault()
+      const username = props.formUsername
+      const password = props.formPassword
 
-    const username = this.$username.current.value
-    const password = this.$password.current.value
+      login({ username, password })
+        .then((res) => {
+          if (res.status === 200) {
+            window.localStorage.setItem('isLoggedIn', true)
+            window.location = '/'
+          } else {
+            props.setFormError('Invalid Login')
+          }
+        })
+    }
+  })
+)
 
-    login({ username, password })
-      .then((res) => {
-        if (res.status === 200) {
-          window.localStorage.setItem('isLoggedIn', true)
-          window.location = '/'
-        } else {
-          this.setState({
-            error: 'Invalid login'
-          })
-        }
-      })
-  }
+const Signup = props => (
+  <div>
+    <h2>Login</h2>
+    <form onSubmit={props.handleSubmit}>
+      <label htmlFor='loginUsername'>Username:
+        <input
+          type='text'
+          name='loginUsername'
+          onChange={props.setFormUsername}
+          value={props.formUsername}
+        />
+      </label>
 
-  render () {
-    return (
+      <label htmlFor='loginPassword'>Password:
+        <input
+          type='password'
+          name='loginPassword'
+          onChange={props.setFormPassword}
+          value={props.formPassword}
+        />
+      </label>
+
+      <button>Login</button>
+    </form>
+
+    {!!props.formError && (
       <div>
-        <h2>Login</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='loginUsername'>Username:
-            <input type='text' name='loginUsername' ref={this.$username} />
-          </label>
-
-          <label htmlFor='loginPassword'>Password:
-            <input type='password' name='loginPassword' ref={this.$password} />
-          </label>
-
-          <button>Login</button>
-        </form>
-
-        {!!this.state.error && (
-          <div>
-            <h3>Error:</h3>
-            {this.state.error}
-          </div>
-        )}
+        <h3>Error:</h3>
+        {props.formError}
       </div>
-    )
-  }
-}
+    )}
+  </div>
+)
 
-Login.propTypes = propTypes
-export default withRouter(Login)
+Signup.propTypes = propTypes
+export default enhance(Signup)

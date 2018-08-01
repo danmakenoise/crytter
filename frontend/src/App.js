@@ -37,7 +37,7 @@ const enhance = compose(
   withState(
     'isLoggedIn',
     'setIsLoggedIn',
-    Boolean(window.localStorage.getItem('isLoggedIn'))
+    false
   ),
   withState(
     'myUsername',

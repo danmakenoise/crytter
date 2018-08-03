@@ -25,7 +25,7 @@ const styles = {
 }
 
 const propTypes = {
-  classes: PropTypes.objectOf(PropTypes.object).isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   myUsername: PropTypes.string.isRequired,
@@ -113,13 +113,13 @@ const App = props => props.isLoaded && (
         <Grid container spacing={24}>
           <Switch>
             {!props.isLoggedIn && [
-              <Route path='/login' render={props.renderLogin} />,
-              <Route path='/signup' render={props.renderSignup} />,
-              <Redirect exact from='/' to='/login' />
+              <Route key='login' path='/login' render={props.renderLogin} />,
+              <Route key='signup' path='/signup' render={props.renderSignup} />,
+              <Redirect key='redirect' exact from='/' to='/login' />
             ]}
             {props.isLoggedIn && [
-              <Route path='/' exact render={props.renderHome} />,
-              <Route path='/logout' render={props.renderLogout} />
+              <Route key='home' path='/' exact render={props.renderHome} />,
+              <Route key='logout' path='/logout' render={props.renderLogout} />
             ]}
           </Switch>
         </Grid>

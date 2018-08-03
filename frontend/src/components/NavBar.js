@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 
 const propTypes = {
-  currentMenuAnchor: PropTypes.node.isRequire,
+  currentMenuAnchor: PropTypes.object,
   handleCloseMenu: PropTypes.func.isRequired,
   handleOpenMenu: PropTypes.func.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
@@ -82,16 +82,12 @@ const NavBar = props => (
           onClose={props.handleCloseMenu}
         >
           {props.isLoggedIn &&
-            <React.Fragment>
-              <MenuItem onClick={props.navigateToLogout}>Logout</MenuItem>
-            </React.Fragment>
+            <MenuItem onClick={props.navigateToLogout}>Logout</MenuItem>
           }
-          {!props.isLoggedIn &&
-            <React.Fragment>
-              <MenuItem onClick={props.navigateToLogin}>Login</MenuItem>
-              <MenuItem onClick={props.navigateToSignup}>Signup</MenuItem>
-            </React.Fragment>
-          }
+          {!props.isLoggedIn && [
+            <MenuItem key='login'  onClick={props.navigateToLogin}>Login</MenuItem>,
+            <MenuItem key='signup' onClick={props.navigateToSignup}>Signup</MenuItem>
+          ]}
         </Menu>
         <Typography variant='title' color='inherit' style={styles.appTitle}>
           Crytter

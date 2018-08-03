@@ -5,6 +5,7 @@ import { lifecycle, withHandlers, withState } from 'recompose'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid'
+import Snackbar from '@material-ui/core/Snackbar'
 import { withStyles } from '@material-ui/core/styles'
 
 import NavBar from './components/NavBar'
@@ -34,11 +35,19 @@ const propTypes = {
   renderSignup: PropTypes.func.isRequired,
   setIsLoaded: PropTypes.func.isRequired,
   setIsLoggedIn: PropTypes.func.isRequired,
-  setMyUsername: PropTypes.func.isRequired
+  setMyUsername: PropTypes.func.isRequired,
+  setSnackbarMessage: PropTypes.func.isRequired,
+  snackbarMessage: PropTypes.string.isRequired
 }
 
+const getViewProps = props => ({
+  isLoggedIn: props.isLoggedIn,
+  myUsername: props.myUsername,
+  setSnackbarMessage: props.setSnackbarMessage
+})
+
 const renderView = Component => props => routeProps =>
-  <Component {...props} {...routeProps} />
+  <Component {...getViewProps(props)} {...routeProps} />
 
 const enhance = compose(
   withStyles(styles),
@@ -46,6 +55,11 @@ const enhance = compose(
     'isLoaded',
     'setIsLoaded',
     false
+  ),
+  withState(
+    'snackbarMessage',
+    'setSnackbarMessage',
+    ''
   ),
   withState(
     'isLoggedIn',
@@ -58,6 +72,13 @@ const enhance = compose(
     ''
   ),
   withHandlers({
+    closeSnackbar: props => (event, reason) => {
+      if (reason === 'clickaway') {
+        return
+      }
+
+      props.setSnackbarMessage('')
+    },
     renderHome: renderView(Home),
     renderLogin: renderView(Login),
     renderLogout: renderView(Logout),
@@ -84,16 +105,9 @@ const App = props => props.isLoaded && (
   <Router>
     <div className='App'>
       <NavBar
-        currentMenuAnchor={props.currentMenuAnchor}
-        handleCloseMenu={props.handleCloseMenu}
-        handleOpenMenu={props.handleOpenMenu}
         history={props.history}
         isLoggedIn={props.isLoggedIn}
-        isMenuOpen={props.isMenuOpen}
         myUsername={props.myUsername}
-        navigateToLogin={props.navigateToLogin}
-        navigateToLogout={props.navigateToLogout}
-        navigateToSignup={props.navigateToSignup}
       />
       <div className={props.classes.gridContainer}>
         <Grid container spacing={24}>
@@ -110,6 +124,12 @@ const App = props => props.isLoaded && (
           </Switch>
         </Grid>
       </div>
+      <Snackbar
+        autoHideDuration={4000}
+        open={props.snackbarMessage}
+        message={props.snackbarMessage}
+        onClose={props.closeSnackbar}
+      />
     </div>
   </Router>
 )

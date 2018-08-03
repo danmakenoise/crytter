@@ -46,7 +46,7 @@ const enhance = compose(
     },
     {
       handleOpenMenu: () => event => ({
-        currentMenuAnchor: event.currentTarget,
+        currentMenuAnchor: event.target,
         isMenuOpen: true
       }),
       handleCloseMenu: () => () => ({

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { compose } from 'ramda'
-import { withHandlers, withState, withStateHandlers } from 'recompose'
+import { withHandlers, withStateHandlers } from 'recompose'
 import { withRouter } from 'react-router-dom'
 
 import Button from '@material-ui/core/Button'
@@ -14,14 +14,13 @@ import { withStyles } from '@material-ui/core/styles'
 import { login } from '../services/session'
 
 const propTypes = {
-  formError: PropTypes.string.isRequired,
   formUsername: PropTypes.string.isRequired,
   formPassword: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  setFormErrors: PropTypes.func.isRequired,
   setFormPassword: PropTypes.func.isRequired,
-  setFormUsername: PropTypes.func.isRequired
+  setFormUsername: PropTypes.func.isRequired,
+  setSnackbarMessage: PropTypes.func.isRequired
 }
 
 const styles = {
@@ -38,7 +37,6 @@ const setFromEventValue = prop => event => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  withState('formError', 'setFormError', ''),
   withStateHandlers(
     {
       formUsername: '',
@@ -62,7 +60,7 @@ const enhance = compose(
             window.localStorage.setItem('isLoggedIn', true)
             window.location = '/'
           } else {
-            props.setFormError('Invalid Login')
+            props.setSnackbarMessage('Invalid Login')
           }
         })
     }
@@ -71,42 +69,36 @@ const enhance = compose(
 
 const Login = props => (
   <Grid item xs={12}>
-    <Grid container spacing={24}>
-      <Grid item xs={12}>
-        <Typography variant='title'>Login</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Input
-          fullWidth
-          type='text'
-          name='loginUsername'
-          onChange={props.setFormUsername}
-          placeholder='Username'
-          value={props.formUsername}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Input
-          fullWidth
-          type='password'
-          name='loginPassword'
-          onChange={props.setFormPassword}
-          placeholder='Password'
-          value={props.formPassword}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Button color='primary' onClick={props.handleSubmit}>Login</Button>
-      </Grid>
-
-      {!!props.formError && (
+    <form onSubmit={props.handleSubmit}>
+      <Grid container spacing={24}>
         <Grid item xs={12}>
-          <Typography variant='display' color='error'>
-            {props.formError}
-          </Typography>
+          <Typography variant='title'>Login</Typography>
         </Grid>
-      )}
-    </Grid>
+        <Grid item xs={12}>
+          <Input
+            fullWidth
+            type='text'
+            name='loginUsername'
+            onChange={props.setFormUsername}
+            placeholder='Username'
+            value={props.formUsername}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Input
+            fullWidth
+            type='password'
+            name='loginPassword'
+            onChange={props.setFormPassword}
+            placeholder='Password'
+            value={props.formPassword}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button color='primary' type='submit'>Login</Button>
+        </Grid>
+      </Grid>
+    </form>
   </Grid>
 )
 

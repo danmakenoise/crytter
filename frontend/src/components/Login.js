@@ -5,6 +5,12 @@ import { compose } from 'ramda'
 import { withHandlers, withState, withStateHandlers } from 'recompose'
 import { withRouter } from 'react-router-dom'
 
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
+
 import { login } from '../services/session'
 
 const propTypes = {
@@ -18,11 +24,19 @@ const propTypes = {
   setFormUsername: PropTypes.func.isRequired
 }
 
+const styles = {
+  container: {
+    width: '350px',
+    margin: '24px auto'
+  }
+}
+
 const setFromEventValue = prop => event => ({
   [prop]: event.target.value
 })
 
 const enhance = compose(
+  withStyles(styles),
   withRouter,
   withState('formError', 'setFormError', ''),
   withStateHandlers(
@@ -55,39 +69,46 @@ const enhance = compose(
   })
 )
 
-const Signup = props => (
-  <div>
-    <h2>Login</h2>
-    <form onSubmit={props.handleSubmit}>
-      <label htmlFor='loginUsername'>Username:
-        <input
+const Login = props => (
+  <Grid item xs={12}>
+    <Grid container spacing={24}>
+      <Grid item xs={12}>
+        <Typography variant='title'>Login</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Input
+          fullWidth
           type='text'
           name='loginUsername'
           onChange={props.setFormUsername}
+          placeholder='Username'
           value={props.formUsername}
         />
-      </label>
-
-      <label htmlFor='loginPassword'>Password:
-        <input
+      </Grid>
+      <Grid item xs={12}>
+        <Input
+          fullWidth
           type='password'
           name='loginPassword'
           onChange={props.setFormPassword}
+          placeholder='Password'
           value={props.formPassword}
         />
-      </label>
+      </Grid>
+      <Grid item xs={12}>
+        <Button color='primary' onClick={props.handleSubmit}>Login</Button>
+      </Grid>
 
-      <button>Login</button>
-    </form>
-
-    {!!props.formError && (
-      <div>
-        <h3>Error:</h3>
-        {props.formError}
-      </div>
-    )}
-  </div>
+      {!!props.formError && (
+        <Grid item xs={12}>
+          <Typography variant='display' color='error'>
+            {props.formError}
+          </Typography>
+        </Grid>
+      )}
+    </Grid>
+  </Grid>
 )
 
-Signup.propTypes = propTypes
-export default enhance(Signup)
+Login.propTypes = propTypes
+export default enhance(Login)

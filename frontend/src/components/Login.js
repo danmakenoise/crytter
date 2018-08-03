@@ -18,6 +18,7 @@ const propTypes = {
   formPassword: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
+  navigateToSignup: PropTypes.func.isRequired,
   setFormPassword: PropTypes.func.isRequired,
   setFormUsername: PropTypes.func.isRequired,
   setSnackbarMessage: PropTypes.func.isRequired
@@ -63,7 +64,8 @@ const enhance = compose(
             props.setSnackbarMessage('Invalid Login')
           }
         })
-    }
+    },
+    navigateToSignup: props => () => props.history.push('/signup')
   })
 )
 
@@ -94,8 +96,11 @@ const Login = props => (
             value={props.formPassword}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Button color='primary' type='submit'>Login</Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button onClick={props.navigateToSignup}>Already have an account?</Button>
         </Grid>
       </Grid>
     </form>

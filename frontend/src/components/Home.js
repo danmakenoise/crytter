@@ -3,17 +3,14 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 
 const propTypes = {
-  myUsername: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired
+  myUsername: PropTypes.string.isRequired
 }
 
 const Login = props => (
-  props.isLoading ? <h1>Loading...</h1> : (
-    <div>
-      <h2>Home</h2>
-      <h3>{props.myUsername}</h3>
-    </div>
-  )
+  <div>
+    <h2>Home</h2>
+    <p>Coming soon...</p>
+  </div>
 )
 
 Login.propTypes = propTypes

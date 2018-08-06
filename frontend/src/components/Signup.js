@@ -5,19 +5,31 @@ import { compose } from 'ramda'
 import { withHandlers, withState, withStateHandlers } from 'recompose'
 import { withRouter } from 'react-router-dom'
 
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
+
 import { signupUser } from '../services/user'
 
 const propTypes = {
-  formErrors: PropTypes.arrayOf(PropTypes.string).isRequired,
   formUsername: PropTypes.string.isRequired,
   formPassword: PropTypes.string.isRequired,
   formPasswordConfirm: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  setFormErrors: PropTypes.func.isRequired,
   setFormPassword: PropTypes.func.isRequired,
   setFormPasswordConfirm: PropTypes.func.isRequired,
-  setFormUsername: PropTypes.func.isRequired
+  setFormUsername: PropTypes.func.isRequired,
+  setSnackbarMessage: PropTypes.func.isRequired
+}
+
+const styles = {
+  container: {
+    width: '350px',
+    margin: '24px auto'
+  }
 }
 
 const setFromEventValue = prop => event => ({
@@ -25,6 +37,7 @@ const setFromEventValue = prop => event => ({
 })
 
 const enhance = compose(
+  withStyles(styles),
   withRouter,
   withState('formErrors', 'setFormErrors', []),
   withStateHandlers(
@@ -50,10 +63,11 @@ const enhance = compose(
       signupUser({ username, password, passwordConfirm })
         .then((errors) => {
           if (errors) {
-            props.setFormErrors(errors)
+            props.setSnackbarMessage(errors.join(', '))
             return
           }
 
+          props.setSnackbarMessage('Account created! You may now login.')
           props.history.push('/login')
         })
     }
@@ -61,51 +75,48 @@ const enhance = compose(
 )
 
 const Signup = props => (
-  <div>
-    <h2>Signup</h2>
+  <Grid item xs={12}>
     <form onSubmit={props.handleSubmit}>
-      <label htmlFor='signupUsername'>Username:
-        <input
-          type='text'
-          name='signupUsername'
-          value={props.formUsername}
-          onChange={props.setFormUsername}
-        />
-      </label>
-
-      <label htmlFor='signupPassword'>Password:
-        <input
-          type='password'
-          name='signupPassword'
-          value={props.formPassword}
-          onChange={props.setFormPassword}
-        />
-      </label>
-
-      <label htmlFor='signupConfirmPassword'>Confirm Password:
-        <input
-          type='password'
-          name='signupConfirmPassword'
-          value={props.formPasswordConfirm}
-          onChange={props.setFormPasswordConfirm}
-        />
-      </label>
-
-      <button>Signup</button>
+      <Grid container spacing={24}>
+        <Grid item xs={12}>
+          <Typography variant='title'>Signup</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Input
+            fullWidth
+            name='signupUsername'
+            onChange={props.setFormUsername}
+            placeholder='Username'
+            type='text'
+            value={props.formUsername}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Input
+            fullWidth
+            name='signupPassword'
+            onChange={props.setFormPassword}
+            placeholder='Password'
+            type='password'
+            value={props.formPassword}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Input
+            fullWidth
+            name='signupConfirmPassword'
+            onChange={props.setFormPasswordConfirm}
+            placeholder='Password Confirmation'
+            type='password'
+            value={props.formPasswordConfirm}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Button color='primary' type='submit'>Signup</Button>
+        </Grid>
+      </Grid>
     </form>
-
-    {!!props.formErrors.length && (
-      <div>
-        <h3>Errors:</h3>
-
-        <ul>
-          {props.formErrors.map((error, index) => (
-            <li key={index}>{error}</li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
+  </Grid>
 )
 
 Signup.propTypes = propTypes

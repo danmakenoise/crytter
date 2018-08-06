@@ -112,7 +112,7 @@ const Signup = props => (
           />
         </Grid>
         <Grid item xs={6}>
-          <Button color='primary' type='submit'>Signup</Button>
+          <Button color='primary' type='submit'>Submit</Button>
         </Grid>
       </Grid>
     </form>

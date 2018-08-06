@@ -100,7 +100,7 @@ const Login = props => (
           <Button color='primary' type='submit'>Login</Button>
         </Grid>
         <Grid item xs={6}>
-          <Button onClick={props.navigateToSignup}>Already have an account?</Button>
+          <Button onClick={props.navigateToSignup}>Don't have an account?</Button>
         </Grid>
       </Grid>
     </form>

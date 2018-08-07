@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     passwordSalt: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    publicKey: {
+      allowNull: false,
+      type: DataTypes.TEXT
+    },
+    encryptedPrivateKey: {
+      allowNull: false,
+      type: DataTypes.TEXT
     }
   }, {})
 

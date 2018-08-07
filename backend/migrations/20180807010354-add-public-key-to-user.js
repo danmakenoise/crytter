@@ -7,7 +7,7 @@ module.exports = {
       'publicKey',
       {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       }
     )
   },

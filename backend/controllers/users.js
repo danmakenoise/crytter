@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
+const ursa = require('ursa')
 const User = require('../models').User
 
 const validatePassword = password => {
@@ -29,11 +31,21 @@ module.exports = {
 
     const passwordSalt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(req.body.password, passwordSalt)
+    
+    const key = ursa.generatePrivateKey()
+    const publicKey = key.toPublicPem()
+    const privateKey = key.toPrivatePem()
+
+    const cipher = crypto.createCipher('aes-256-ctr', req.body.password) // eslint-disable-line
+    const crypted = cipher.update(privateKey, 'utf8', 'hex')
+    const encryptedPrivateKey = `${crypted}${cipher.final('hex')}`
 
     return User.create({
       username: req.body.username,
       passwordHash,
-      passwordSalt
+      passwordSalt,
+      publicKey,
+      encryptedPrivateKey
     })
       .then(user => res.status(201).send({
         id: user.id,

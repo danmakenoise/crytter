@@ -63,13 +63,14 @@ module.exports = {
       })
   },
   me (req, res) {
-    if (!req.session.username) {
-      console.warn(`Session cookie missing or contained no username`)
+    if (!req.session.userId || !req.session.username) {
+      console.warn(`Session cookie missing or incomplete`)
       return res.status(401).send({ error: 'Unauthorized' })
     }
 
     User.findOne({
       where: {
+        id: req.session.userId,
         username: req.session.username
       }
     })

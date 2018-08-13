@@ -25,6 +25,7 @@ module.exports = {
         }
 
         req.session.username = user.username
+        req.session.userId = user.id
 
         req.session.save(() => {
           res.status(200).send({
@@ -34,7 +35,7 @@ module.exports = {
       })
   },
   logout (req, res) {
-    if (!req.session.username) {
+    if (!req.session.username || !req.session.userId) {
       return res.status(401).send()
     }
 

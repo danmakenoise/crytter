@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 const User = require('../models').User
 
 module.exports = {
@@ -24,8 +25,13 @@ module.exports = {
           return res.status(401).send()
         }
 
+        const decipher = crypto.createDecipher('aes-256-ctr', req.body.password) // eslint-disable-line
+        const decrypted = decipher.update(user.encryptedPrivateKey, 'hex', 'utf8')
+        const privateKey = `${decrypted}${decipher.final('utf8')}`
+
         req.session.username = user.username
         req.session.userId = user.id
+        req.session.privateKey = privateKey
 
         req.session.save(() => {
           res.status(200).send({

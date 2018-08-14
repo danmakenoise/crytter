@@ -35,6 +35,7 @@ app.post('/login', sessionsController.login)
 app.get('/logout', sessionsController.logout)
 
 app.post('/messages', messagesController.create)
+app.get('/messages', messagesController.get)
 
 app.get('/users/me', usersController.me)
 app.post('/users', usersController.create)

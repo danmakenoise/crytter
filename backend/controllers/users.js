@@ -31,10 +31,10 @@ module.exports = {
 
     const passwordSalt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(req.body.password, passwordSalt)
-    
+
     const key = ursa.generatePrivateKey()
-    const publicKey = key.toPublicPem()
-    const privateKey = key.toPrivatePem()
+    const publicKey = key.toPublicPem('utf8')
+    const privateKey = key.toPrivatePem('utf8')
 
     const cipher = crypto.createCipher('aes-256-ctr', req.body.password) // eslint-disable-line
     const crypted = cipher.update(privateKey, 'utf8', 'hex')

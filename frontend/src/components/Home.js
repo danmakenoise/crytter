@@ -6,12 +6,12 @@ const propTypes = {
   myUsername: PropTypes.string.isRequired
 }
 
-const Login = props => (
+const Home = props => (
   <div>
     <h2>Home</h2>
     <p>Coming soon...</p>
   </div>
 )
 
-Login.propTypes = propTypes
-export default withRouter(Login)
+Home.propTypes = propTypes
+export default withRouter(Home)

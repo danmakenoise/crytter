@@ -32,4 +32,4 @@ export const sendMessage = (params) => window.fetch(
       recipientUsername: params.recipientUsername
     })
   }
-).then(res => res.json())
+)

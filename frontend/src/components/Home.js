@@ -55,8 +55,8 @@ const Home = props => (
   <Grid item xs={12}>
     <Typography variant='title'>Home</Typography>
     <Grid container spacing={24}>
-      {props.messages.map(message => (
-        <Grid item xs={6}>
+      {props.messages.map((message, index) => (
+        <Grid key={index} item xs={6}>
           <Typography variant='display1'>{message.message}</Typography>
           <Typography variant='body1'>From: {message.senderUsername}</Typography>
         </Grid>

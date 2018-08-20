@@ -126,7 +126,7 @@ const App = props => props.isLoaded && (
       </div>
       <Snackbar
         autoHideDuration={4000}
-        open={props.snackbarMessage}
+        open={Boolean(props.snackbarMessage)}
         message={props.snackbarMessage}
         onClose={props.closeSnackbar}
       />

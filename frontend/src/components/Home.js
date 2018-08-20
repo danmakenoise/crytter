@@ -39,7 +39,9 @@ const enhance = compose(
   withHandlers({
     loadMessages: props => () => getMessages().then((messages) => {
       props.setMessages(messages)
-    }),
+    })
+  }),
+  withHandlers({
     handleSubmit: props => async (event) => {
       event.preventDefault()
 

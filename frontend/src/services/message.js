@@ -17,3 +17,19 @@ export const getMessages = () => window.fetch(
     }
   }
 ).then(res => res.json())
+
+export const sendMessage = (params) => window.fetch(
+  `${config.api}/messages`,
+  {
+    credentials: 'include',
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: params.message,
+      recipientUsername: params.recipientUsername
+    })
+  }
+).then(res => res.json())

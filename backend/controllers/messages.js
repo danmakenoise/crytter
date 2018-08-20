@@ -17,7 +17,7 @@ module.exports = {
         const fileKey = crypto.randomBytes(64).toString('hex')
 
         const recipient = await User.findOne({
-          id: req.body.recipientId
+          username: req.body.recipientUsername
         })
 
         const encryptedKey = ursa.createPublicKey(recipient.publicKey, 'utf8')
@@ -34,7 +34,7 @@ module.exports = {
         await Share.create({
           messageId: message.id,
           senderId: req.session.userId,
-          recipientId: req.body.recipientId,
+          recipientId: recipient.id,
           encryptedKey
         }, { transaction })
 

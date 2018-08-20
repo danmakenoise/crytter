@@ -58,7 +58,10 @@ module.exports = {
     }
 
     const encryptedMessages = await Share.findAll({
-      include: [{ model: Message, as: 'message' }],
+      include: [
+        { model: Message, as: 'message' },
+        { model: User, as: 'sender' }
+      ],
       where: {
         recipientId: req.session.userId
       }
@@ -76,6 +79,7 @@ module.exports = {
 
       return {
         senderId: message.senderId,
+        senderUsername: message.sender.username,
         recipientId: message.recipientId,
         message: messageBody
       }

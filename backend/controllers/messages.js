@@ -17,7 +17,9 @@ module.exports = {
         const fileKey = crypto.randomBytes(64).toString('hex')
 
         const recipient = await User.findOne({
-          username: req.body.recipientUsername
+          where: {
+            username: req.body.recipientUsername
+          }
         })
 
         const encryptedKey = ursa.createPublicKey(recipient.publicKey, 'utf8')

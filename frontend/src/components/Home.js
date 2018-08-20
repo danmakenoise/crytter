@@ -40,10 +40,14 @@ const enhance = compose(
     loadMessages: props => () => getMessages().then((messages) => {
       props.setMessages(messages)
     }),
-    handleSubmit: props => () => sendMessage({
-      message: props.formMessage,
-      recipientUsername: props.myUsername
-    })
+    handleSubmit: props => (event) => {
+      event.preventDefault()
+
+      sendMessage({
+        message: props.formMessage,
+        recipientUsername: props.myUsername
+      })
+    }
   }),
   lifecycle({
     componentDidMount () {

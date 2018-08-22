@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import { getMessages, sendMessage } from '../services/message'
 
 const propTypes = {
+  clearForm: PropTypes.func.isRequired,
   formMessage: PropTypes.string.isRequired,
   formRecipient: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -34,6 +35,10 @@ const enhance = compose(
       formRecipient: ''
     },
     {
+      clearForm: () => () => ({
+        formMessage: '',
+        formRecipient: ''
+      }),
       setFormMessage: () => (event) => ({
         formMessage: event.target.value
       }),
@@ -57,6 +62,7 @@ const enhance = compose(
       })
 
       props.loadMessages()
+      props.clearForm()
     }
   }),
   lifecycle({

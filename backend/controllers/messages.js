@@ -92,5 +92,47 @@ module.exports = {
     })
 
     res.status(200).send(decryptedMessages)
+  },
+
+  async getSent (req, res) {
+    if (!req.session.userId || !req.session.username) {
+      console.warn(`Session cookie missing or incomplete`)
+      return res.status(401).send({ error: 'Unauthorized' })
+    }
+
+    if (!req.session.privateKey) {
+      console.warn(`Private key missing`)
+      return res.status(401).send({ error: 'Unauthorized' })
+    }
+
+    const encryptedMessages = await Share.findAll({
+      include: [
+        { model: Message, as: 'message' },
+        { model: User, as: 'sender' }
+      ],
+      where: {
+        senderId: req.session.userId
+      }
+    })
+
+    const decryptedMessages = encryptedMessages.map(message => {
+      const encryptedKey = message.encryptedKey
+
+      const key = ursa.createPrivateKey(req.session.privateKey)
+        .decrypt(encryptedKey, 'base64', 'utf8')
+
+      const decipher = crypto.createDecipher('aes-256-ctr', key) // eslint-disable-line
+      const decrypted = decipher.update(message.message.encryptedBody, 'hex', 'utf8')
+      const messageBody = `${decrypted}${decipher.final('utf8')}`
+
+      return {
+        senderId: message.senderId,
+        senderUsername: message.sender.username,
+        recipientId: message.recipientId,
+        message: messageBody
+      }
+    })
+
+    res.status(200).send(decryptedMessages)
   }
 }

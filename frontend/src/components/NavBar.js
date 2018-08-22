@@ -34,6 +34,7 @@ const styles = {
     flexGrow: 1
   },
   appTitle: {
+    cursor: 'pointer',
     flexGrow: 1,
     marginLeft: 20
   }
@@ -95,9 +96,11 @@ const NavBar = props => (
             <MenuItem key='signup' onClick={props.navigateToSignup}>Signup</MenuItem>
           ]}
         </Menu>
-        <Typography variant='title' color='inherit' style={styles.appTitle}>
-          Crytter
-        </Typography>
+        <span onClick={props.navigateToHome} style={styles.appTitle}>
+          <Typography variant='title' color='inherit'>
+            Crytter
+          </Typography>
+        </span>
         <Typography variant='subheading' color='inherit' style={styles.flexGrow}>
           {props.isLoggedIn
             ? <span>Signed In As: <em>{props.myUsername}</em></span>

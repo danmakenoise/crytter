@@ -12,6 +12,7 @@ import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
 import Logout from './components/Logout'
+import Sent from './components/Sent'
 import Signup from './components/Signup'
 
 import { getMe } from './services/user'
@@ -32,6 +33,7 @@ const propTypes = {
   renderHome: PropTypes.func.isRequired,
   renderLogin: PropTypes.func.isRequired,
   renderLogout: PropTypes.func.isRequired,
+  renderSent: PropTypes.func.isRequired,
   renderSignup: PropTypes.func.isRequired,
   setIsLoaded: PropTypes.func.isRequired,
   setIsLoggedIn: PropTypes.func.isRequired,
@@ -82,7 +84,8 @@ const enhance = compose(
     renderHome: renderView(Home),
     renderLogin: renderView(Login),
     renderLogout: renderView(Logout),
-    renderSignup: renderView(Signup)
+    renderSignup: renderView(Signup),
+    renderSent: renderView(Sent)
   }),
   lifecycle({
     componentDidMount () {
@@ -119,6 +122,7 @@ const App = props => props.isLoaded && (
             ]}
             {props.isLoggedIn && [
               <Route key='home' path='/' exact render={props.renderHome} />,
+              <Route key='sent' path='/sent' exact render={props.renderSent} />,
               <Route key='logout' path='/logout' render={props.renderLogout} />
             ]}
           </Switch>

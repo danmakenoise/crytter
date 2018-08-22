@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
     Share.belongsTo(
       models.User,
       {
+        as: 'owner',
+        foreignKey: 'ownerId'
+      }
+    )
+
+    Share.belongsTo(
+      models.User,
+      {
         as: 'recipient',
         foreignKey: 'recipientId'
       }

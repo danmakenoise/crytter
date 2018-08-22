@@ -24,6 +24,7 @@ const propTypes = {
   myUsername: PropTypes.string.isRequired,
   navigateToLogin: PropTypes.func.isRequired,
   navigateToLogout: PropTypes.func.isRequired,
+  navigateToSent: PropTypes.func.isRequired,
   navigateToSignup: PropTypes.func.isRequired
 }
 
@@ -64,7 +65,8 @@ const enhance = compose(
   withHandlers({
     navigateToLogin: props => () => props.closeMenuAndNavigate('/login'),
     navigateToLogout: props => () => props.closeMenuAndNavigate('/logout'),
-    navigateToSignup: props => () => props.closeMenuAndNavigate('/signup')
+    navigateToSignup: props => () => props.closeMenuAndNavigate('/signup'),
+    navigateToSent: props => () => props.closeMenuAndNavigate('/sent')
   }),
   withStyles(styles)
 )
@@ -81,11 +83,12 @@ const NavBar = props => (
           open={props.isMenuOpen}
           onClose={props.handleCloseMenu}
         >
-          {props.isLoggedIn &&
-            <MenuItem onClick={props.navigateToLogout}>Logout</MenuItem>
-          }
+          {props.isLoggedIn && [
+            <MenuItem key='sent' onClick={props.navigateToSent}>Sent Messages</MenuItem>,
+            <MenuItem key='logout' onClick={props.navigateToLogout}>Logout</MenuItem>
+          ]}
           {!props.isLoggedIn && [
-            <MenuItem key='login'  onClick={props.navigateToLogin}>Login</MenuItem>,
+            <MenuItem key='login' onClick={props.navigateToLogin}>Login</MenuItem>,
             <MenuItem key='signup' onClick={props.navigateToSignup}>Signup</MenuItem>
           ]}
         </Menu>

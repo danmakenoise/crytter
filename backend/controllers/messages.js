@@ -16,18 +16,21 @@ module.exports = {
       try {
         const fileKey = crypto.randomBytes(64).toString('hex')
 
+        const sender = await User.findOne({
+          where: {
+            username: req.session.username
+          }
+        })
+
         const recipient = await User.findOne({
           where: {
             username: req.body.recipientUsername
           }
         })
 
-        if (!recipient) {
+        if (!recipient || !sender) {
           res.status(401).send()
         }
-
-        const encryptedKey = ursa.createPublicKey(recipient.publicKey, 'utf8')
-          .encrypt(fileKey, 'utf8', 'base64')
 
         const cipher = crypto.createCipher('aes-256-ctr', fileKey) // eslint-disable-line
         const crypted = cipher.update(req.body.message, 'utf8', 'hex')
@@ -37,12 +40,29 @@ module.exports = {
           encryptedBody
         }, { transaction })
 
+        const encryptedKey = ursa.createPublicKey(sender.publicKey, 'utf8')
+          .encrypt(fileKey, 'utf8', 'base64')
+
         await Share.create({
           messageId: message.id,
+          ownerId: sender.id,
           senderId: req.session.userId,
           recipientId: recipient.id,
           encryptedKey
         }, { transaction })
+
+        if (recipient.id !== sender.id) {
+          const recipientEncryptedKey = ursa.createPublicKey(recipient.publicKey, 'utf8')
+            .encrypt(fileKey, 'utf8', 'base64')
+
+          await Share.create({
+            messageId: message.id,
+            ownerId: recipient.id,
+            senderId: req.session.userId,
+            recipientId: recipient.id,
+            encryptedKey: recipientEncryptedKey
+          }, { transaction })
+        }
 
         res.status(200).send()
       } catch (err) {
@@ -69,7 +89,8 @@ module.exports = {
         { model: User, as: 'sender' }
       ],
       where: {
-        recipientId: req.session.userId
+        recipientId: req.session.userId,
+        ownerId: req.session.userId
       }
     })
 
@@ -108,10 +129,11 @@ module.exports = {
     const encryptedMessages = await Share.findAll({
       include: [
         { model: Message, as: 'message' },
-        { model: User, as: 'sender' }
+        { model: User, as: 'recipient' }
       ],
       where: {
-        senderId: req.session.userId
+        senderId: req.session.userId,
+        ownerId: req.session.userId
       }
     })
 
@@ -126,9 +148,8 @@ module.exports = {
       const messageBody = `${decrypted}${decipher.final('utf8')}`
 
       return {
-        senderId: message.senderId,
-        senderUsername: message.sender.username,
         recipientId: message.recipientId,
+        recipientUsername: message.recipient.username,
         message: messageBody
       }
     })

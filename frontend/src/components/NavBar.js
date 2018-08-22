@@ -22,6 +22,7 @@ const propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isMenuOpen: PropTypes.bool.isRequired,
   myUsername: PropTypes.string.isRequired,
+  navigateToHome: PropTypes.func.isRequired,
   navigateToLogin: PropTypes.func.isRequired,
   navigateToLogout: PropTypes.func.isRequired,
   navigateToSent: PropTypes.func.isRequired,
@@ -63,6 +64,7 @@ const enhance = compose(
     }
   }),
   withHandlers({
+    navigateToHome: props => () => props.closeMenuAndNavigate('/'),
     navigateToLogin: props => () => props.closeMenuAndNavigate('/login'),
     navigateToLogout: props => () => props.closeMenuAndNavigate('/logout'),
     navigateToSignup: props => () => props.closeMenuAndNavigate('/signup'),
@@ -84,6 +86,7 @@ const NavBar = props => (
           onClose={props.handleCloseMenu}
         >
           {props.isLoggedIn && [
+            <MenuItem key='home' onClick={props.navigateToHome}>Home</MenuItem>,
             <MenuItem key='sent' onClick={props.navigateToSent}>Sent Messages</MenuItem>,
             <MenuItem key='logout' onClick={props.navigateToLogout}>Logout</MenuItem>
           ]}

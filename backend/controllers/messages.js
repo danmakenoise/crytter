@@ -22,6 +22,10 @@ module.exports = {
           }
         })
 
+        if (!recipient) {
+          res.status(401).send()
+        }
+
         const encryptedKey = ursa.createPublicKey(recipient.publicKey, 'utf8')
           .encrypt(fileKey, 'utf8', 'base64')
 

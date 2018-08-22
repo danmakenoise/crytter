@@ -13,10 +13,12 @@ import { getMessages, sendMessage } from '../services/message'
 
 const propTypes = {
   formMessage: PropTypes.string.isRequired,
+  formRecipient: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(PropTypes.object).isRequired,
   myUsername: PropTypes.string.isRequired,
   setFormMessage: PropTypes.func.isRequired,
+  setFormRecipient: PropTypes.func.isRequired,
   setMessages: PropTypes.func.isRequired
 }
 
@@ -28,11 +30,15 @@ const enhance = compose(
   ),
   withStateHandlers(
     {
-      formMessage: ''
+      formMessage: '',
+      formRecipient: ''
     },
     {
       setFormMessage: () => (event) => ({
         formMessage: event.target.value
+      }),
+      setFormRecipient: () => (event) => ({
+        formRecipient: event.target.value
       })
     }
   ),
@@ -47,7 +53,7 @@ const enhance = compose(
 
       await sendMessage({
         message: props.formMessage,
-        recipientUsername: props.myUsername
+        recipientUsername: props.formRecipient
       })
 
       props.loadMessages()
@@ -80,7 +86,16 @@ const Home = props => (
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Typography variant='body2'>Send A Message</Typography>
-            <Typography variant='body1'>You can only send messages to yourself for now.</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Input
+              fullWidth
+              type='text'
+              name='recipient'
+              onChange={props.setFormRecipient}
+              placeholder='Recipient Username'
+              value={props.formRecipient}
+            />
           </Grid>
           <Grid item xs={12}>
             <Input
